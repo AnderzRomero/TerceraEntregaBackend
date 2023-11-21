@@ -5,6 +5,8 @@ import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/sessions.router.js";
 import "./dao/mongo/dbConfig.js";
+
+import cartSetter from "./dao/middlewares/carritoSetter.js";
 import __dirname from "./utils.js"
 import cookieParser from "cookie-parser";
 import session from 'express-session';
@@ -19,6 +21,7 @@ const PORT = process.env.PORT || 8080;
 // middlewars
 app.use(express.json());
 app.use(cookieParser());
+app.use(cartSetter);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 app.use(cookieParser("CRYPTO")); 

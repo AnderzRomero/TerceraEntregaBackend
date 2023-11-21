@@ -27,7 +27,7 @@
                 <p class="card-text"><strong>Precio: $ </strong>{{this.price}}</p>
             </div>
         </div>
-        <button>Agregar al Carrito</button>
+        <button onclick="addProduct('{{this.id}}')">Agregar al Carrito</button>
     </div>
     {{/each}}
 </div>
@@ -43,3 +43,5 @@
     <a href="/products?page={{nextPage}}"><button>Siguiente</button></a>
     {{/if}}
 </div>
+
+<script src="../public/js/products.js"></script>
