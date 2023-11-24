@@ -6,7 +6,7 @@ import viewsRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/sessions.router.js";
 import "./dao/mongo/dbConfig.js";
 
-import cartSetter from "./dao/middlewares/carritoSetter.js";
+import cartSetter from "./middlewares/cartSetter.js";
 import __dirname from "./utils.js"
 import cookieParser from "cookie-parser";
 import session from 'express-session';

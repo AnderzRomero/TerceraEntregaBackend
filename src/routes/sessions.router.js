@@ -40,6 +40,7 @@ router.post('/loginJWT', async (req, res) => {
     */
     console.log(token);
     res.send({ status: "success", token })
+    
 })
 
 

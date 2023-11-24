@@ -26,6 +26,7 @@ router.get('/products', async (req, res) => {
   const products = await productsService.getViewsProducts(limit, page, queryObject, sort);
 
   res.render('Products', {
+    css:'products',
     user: req.session.user,
     filterProducts: products.filterProducts,
     page: products.page,

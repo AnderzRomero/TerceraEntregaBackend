@@ -27,7 +27,7 @@
                 <p class="card-text"><strong>Precio: $ </strong>{{this.price}}</p>
             </div>
         </div>
-        <button onclick="addProduct('{{this.id}}')">Agregar al Carrito</button>
+        <button onclick="addProduct('{{this._id}}')">Agregar al Carrito</button>
     </div>
     {{/each}}
 </div>
@@ -44,4 +44,4 @@
     {{/if}}
 </div>
 
-<script src="../public/js/products.js"></script>
+<script src="/js/products.js"></script>
