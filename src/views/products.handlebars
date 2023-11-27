@@ -1,18 +1,11 @@
 <h1 class="container-fluid">Lista de Productos</h1>
-<h2 class="container-fluid">Bienvenido {{user.firstName}} {{user.lastName}} Tienes el rol de :{{user.role}}</h2>
+<h2 class="container-fluid">Bienvenido {{user.name}} Tienes el rol de :{{user.role}}</h2>
 <a href="/api/sessions/logout"><button>Cerrar Session</button></a>
 <br>
 
-{{#if category}}
-<p>Category: {{category}}</p>
-{{/if}}
-
 <div class="container">
-    {{#if status}}
-    <p>Status: {{status}}</p>
-    {{/if}}
 
-    {{#each filterProducts}}
+    {{#each products}}
     <br>
 
     <div class="card">
@@ -34,13 +27,13 @@
 
 <div class="paginationPanel">
     {{#if hasPrevPage}}
-    <a href="/products?page={{prevPage}}"><button>Anterior</button></a>
+    <a href="/api/products?page={{prevPage}}"><button>Anterior</button></a>
     {{/if}}
 
-    <h5>PAGINA: {{page}}</h5>
+    <h5>Pagina: {{page}}</h5>
 
     {{#if hasNextPage}}
-    <a href="/products?page={{nextPage}}"><button>Siguiente</button></a>
+    <a href="/api/products?page={{nextPage}}"><button>Siguiente</button></a>
     {{/if}}
 </div>
 

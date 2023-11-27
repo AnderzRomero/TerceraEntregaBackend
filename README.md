@@ -3,7 +3,7 @@ Este es un proyecto de ecommerce básico que se utiliza para el curso de Program
 
 ## Tecnologías utilizadas
 - Node.JS   ----->  `npm init -y` 
-- Paquetes a instalar de npm   ----->  `npm install express express-handlebars nodemon mongoose multer dotenv mongoose-paginate-v2 cookie-parser express-session connect-mongo bcrypt passport passport-local passport-github2 jsonwebtoken`
+- Paquetes a instalar de npm   ----->  `npm install express express-handlebars nodemon mongoose multer dotenv mongoose-paginate-v2 cookie-parser express-session connect-mongo bcrypt passport passport-local passport-github2 jsonwebtoken passport-jwt`
 
 ## Funcionalidades
 ### algunas desde el Frontend y otras desde POSTMAN

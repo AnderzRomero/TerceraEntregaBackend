@@ -1,27 +1,27 @@
 import { Router } from "express";
-import passport from "passport";
 import jwt from "jsonwebtoken";
 
 import UserManager from "../dao/mongo/managers/usersManager.js";
 import auth from "../services/auth.js";
 import { validateJWT } from "../middlewares/jwtExtractor.js";
+import dotenv from "dotenv";
+import passportCall from "../middlewares/passportCall.js";
+import authorization from "../middlewares/authorization.js";
+
+
+dotenv.config();
 
 const router = Router();
 const usersServices = new UserManager();
 
 
 // EndPoint para crear un usuario y almacenarlo en la Base de Datos
-router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/authFail', failureMessage: true }), async (req, res) => {
+router.post('/register', passportCall('register'), async (req, res) => {
     res.status(200).send({ status: "success", message: "Usuario registrado correctamente", payload: req.user._id });
 })
 
 // EndPoint para logearse con el usuario
-router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/authFail', failureMessage: true }), async (req, res) => {
-    req.session.user = req.user;
-    res.send({ status: "success", message: "logeado correctamente" });
-})
-
-router.post('/loginJWT', async (req, res) => {
+router.post('/login', passportCall('login'), async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).send({ status: "error", error: "Valores incompletos" });
 
@@ -29,27 +29,35 @@ router.post('/loginJWT', async (req, res) => {
     if (!user) return res.status(400).send({ status: "error", error: "Credenciales Incorrectas" });
     const isValidPassword = await auth.validatePassword(password, user.password);
     if (!isValidPassword) return res.status(400).send({ status: "error", error: "Credenciales Incorrectas" });
-    //si se logueo bien, AHORA LE CREO UN TOKEN
-    const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName },
-        'secretjwt',
-        { expiresIn: '1h' });
-    //Si la idea es delegar el token al usuario, tengo que enviarselo de alguna manera
-    /**
-        * Desde el body, *** HOY ***
-        * Desde una Cookie ***** PRÓXIMA VEZ *****
-    */
-    console.log(token);
-    res.send({ status: "success", token })
-    
-})
 
+    const tokenizedUser = {
+        name: `${req.user.firstName} ${req.user.lastName}`,
+        nombres: req.user.firstName,
+        apellidos: req.user.lastName,
+        id: req.user._id,
+        role: req.user.role
+    }
+    const token = jwt.sign(tokenizedUser,
+        process.env.SECRET_KEY,
+        { expiresIn: '1h' }
+    );
+
+    res.cookie('authCookie', token, { httpOnly: true }).send({ status: "success", message: "logeado correctamente", token });
+})
 
 // EndPoints para autenticacion de terceros
-router.get('/github', passport.authenticate('github'), (req, res) => { })   //Trigger de mi estartegia de passport
-router.get('/githubcallback', passport.authenticate('github'), (req, res) => {
-    req.session.user = req.user;
-    res.redirect('/products');
+router.get('/github', passportCall('github'), (req, res) => { })   //Trigger de mi estartegia de passport
+router.get('/githubcallback', passportCall('github'), (req, res) => {
+    req.user = req.user;
+    res.redirect('/api/products');
 })
+
+// EndPoint para la session
+router.get('/current', passportCall('jwt'), authorization('user'), (req, res) => {
+    const user = req.user;
+    res.send({ status: "success", payload: user })
+});
+
 
 //EndPoint para redirigis cualquier error del proceso de autenticacion
 router.get('/authFail', (req, res) => {
@@ -58,13 +66,9 @@ router.get('/authFail', (req, res) => {
 
 // EndPoint para Finalizar la session
 router.get('/logout', async (req, res) => {
-    req.session.destroy(error => {
-        if (error) {
-            console.log(error);
-        }
-        return res.redirect('/');
-    });
-})
+    res.clearCookie('authCookie'); // Elimina la cookie del token
+    return res.redirect('/');
+});
 
 // router.get('/eliminarProductos',(req,res)=>{
 //     //Número uno, ¿Ya tiene credenciales (ya puedo identificarlo)?
@@ -76,10 +80,10 @@ router.get('/logout', async (req, res) => {
 //     res.send({status:"success",message:"Productos eliminados"})
 // })
 
-router.get('/profileInfo',validateJWT,async(req,res)=>{
+router.get('/profileInfo', validateJWT, async (req, res) => {
     //Éste debe devolver la información a partir del token
     console.log(req.user);
-    res.send({status:"success",payload:req.user})
+    res.send({ status: "success", payload: req.user })
 })
 
 
