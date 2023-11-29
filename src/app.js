@@ -5,7 +5,8 @@ import "./dao/mongo/dbConfig.js";
 
 
 import viewsRouter from "./routes/views.router.js";
-import sessionRouter from "./routes/sessions.router.js";
+// import sessionRouter from "./routes/sessions.router.js";
+import SessionsRouter from "./routes/SessionsRouter.js";
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 
@@ -31,12 +32,13 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
 
+initializeStrategies();
+
 //rutas
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use('/api/sessions', sessionRouter);
+app.use('/api/sessions', SessionsRouter);
 
-initializeStrategies();
 
 app.listen(PORT, () =>console.log(`Servidor escuchando en el puerto ${PORT}`));

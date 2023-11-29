@@ -54,7 +54,7 @@ const initializeStrategies = () => {
 
     }))
 
-    passport.use('github', new GithubStrategy({
+    passport.use('github', new GithubStrategy({session:false, 
         clientID: 'Iv1.47994dddd59e9f0e',
         clientSecret: 'c07df5b4bf34171576817394190b1424b2f3b45b',
         callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
