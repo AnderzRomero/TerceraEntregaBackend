@@ -32,16 +32,32 @@ class SessionsRouter extends BaseRouter {
             res.sendSuccessWithPayload(req.user);
         })
         // EndPoints para autenticacion de terceros
-        this.get('/github', passportCall('github'), async (req, res) => { })   //Trigger de mi estartegia de passport
-        this.get('/githubcallback', passportCall('github'), (req, res) => {
-            req.user = req.user;
-            console.log(req.user);
-            return res.redirect('/api/products');
+        this.get('/github', passportCall('github'));   //Trigger de mi estartegia de passport
+        this.get('/githubcallback', passportCall('github'), async (req, res) => {
+            if (!req.user) {
+                return res.status(403).sendError("No se pudo autenticar");
+            } else {    
+                const tokenizedUser = {
+                    name: `${req.user.firstName} ${req.user.lastName}`,                    
+                    id: req.user._id,
+                    role: req.user.role
+                }
+
+                const token = jwt.sign(tokenizedUser, process.env.SECRET_KEY, { expiresIn: '1h' });
+                res.cookie('authCookie', token, { httpOnly: true });
+                // return res.status(200).json({ status: 'success', token: token });
+
+                console.log("Usuario autenticado:", token);
+                return res.redirect('/api/products');
+            }
+            // // req.user = req.user;
+            // console.log("Imprimiendo en el EndPoint",req.user);
         })
         // EndPoint para Finalizar la session
         this.get('/logout', async (req, res) => {
             res.clearCookie('authCookie'); // Elimina la cookie del token
             return res.redirect('/');
+
         });
     }
 }

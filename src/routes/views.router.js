@@ -16,10 +16,15 @@ router.get("/messages", (req, res) => {
 });
 
 // rutas para el sistema de login 
-
-router.get('/', passportCall('jwt'), async (req, res) => {
-  if (req.user) {
-    res.render('profile', { user: req.user });
+router.get('/', async (req, res) => {
+  res.redirect('/login');
+  if (passportCall("jwt")) {
+    if (req.user) {
+      return res.redirect('/login');
+    } else if (!req.user) {
+      console.log("No estoy logeado");
+      res.render('profile', { user: req.user });
+    }
   }
 })
 
