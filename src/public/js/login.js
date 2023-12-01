@@ -1,7 +1,6 @@
 const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', async e => {
-    console.log(e);
     e.preventDefault();
     const data = new FormData(form);
     const obj = {};
@@ -14,13 +13,9 @@ form.addEventListener('submit', async e => {
         }
     })
     const result = await response.json();
+    console.log(result);
     if (response.status === 200) {
-        // Almacena el token en el almacenamiento local (localStorage o sessionStorage)
-        // localStorage.setItem('token', result.token);
         // Redirige a la ruta deseada
         window.location.href = '/api/products';
-
-        //JWT
-        // localStorage.setItem('accessToken',result.token)
     }
 })

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productsManager.js";
-import passportCall from "../middlewares/passportCall.js";
 
 const router = Router();
 const productsService = new ProductManager();

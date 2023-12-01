@@ -69,43 +69,6 @@ router.put('/:cid/products/:pid', async (req, res) => {
   }
 })
 
-
-
-// router.put('/:cid', async (req, res) => {
-//   const carrito_id = req.params.cid;
-//   const nuevosProductos = req.body.products;
-
-//   try {
-//     const carritoActualizado = await cartService.updateCartWithProducts(carrito_id, nuevosProductos);
-//     res.status(200).json({ status: "success", message: "Carrito actualizado con nuevos productos", cart: carritoActualizado });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// router.put("/:cid/products/:pid", async (req, res) => {
-//   const { cid, pid } = req.params;
-//   const nuevaCantidad = req.body.quantity;
-
-//   try {
-//     const carritoActualizado = await cartService.updateProductQuantity(cid, pid, nuevaCantidad);
-//     res.status(200).json({ status: "success", message: "Cantidad de producto actualizada en el carrito", cart: carritoActualizado });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-// router.delete('/:cid', async (req, res) => {
-//   const carrito_id = req.params.cid;
-
-//   try {
-//     const carritoActualizado = await cartService.deleteAllProductsInCart(carrito_id);
-//     res.status(200).json({ status: "success", message: "Todos los productos del carrito fueron eliminados", cart: carritoActualizado });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
 router.delete('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
 
