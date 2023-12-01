@@ -40,7 +40,8 @@ class SessionsRouter extends BaseRouter {
                 const tokenizedUser = {
                     name: `${req.user.firstName} ${req.user.lastName}`,
                     id: req.user._id,
-                    role: req.user.role
+                    role: req.user.role,
+                    cart: req.user.cart
                 }
 
                 const token = jwt.sign(tokenizedUser, process.env.SECRET_KEY, { expiresIn: '1h' });
