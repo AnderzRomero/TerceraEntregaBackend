@@ -1,31 +1,20 @@
-import { Router } from "express";
-import ProductManager from "../dao/mongo/managers/productsManager.js";
+import BaseRouter from "./BaseRouter.js";
 
-const router = Router();
-const productsService = new ProductManager();
+class ViewsRouter extends BaseRouter {
+  init() {
+    // rutas para el sistema de login 
+    this.get('/', ['PUBLIC'], async (req, res) => {
+      res.redirect('/login');
+    })
+    this.get('/login', async (req, res) => {
+      res.render('login')
+    })
+    this.get('/register', async (req, res) => {
+      res.render('register')
+    })
+  }
+}
 
+const viewsRouter = new ViewsRouter();
 
-router.get("/realTimeProducts", async (req, res) => {
-  const listaProductos = await productsService.getProducts();
-  res.render("realTimeProducts", { listaProductos });
-});
-
-router.get("/messages", (req, res) => {
-  res.render("messages");
-});
-
-// rutas para el sistema de login 
-router.get('/', async (req, res) => {
-  res.redirect('/login');
-})
-
-router.get('/login', async (req, res) => {
-  res.render('login')
-})
-
-router.get('/register', async (req, res) => {
-  res.render('register')
-})
-
-
-export default router;
+export default viewsRouter.getRouter();

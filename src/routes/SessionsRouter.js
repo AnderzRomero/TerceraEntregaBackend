@@ -52,7 +52,7 @@ class SessionsRouter extends BaseRouter {
         })
         // EndPoint para Finalizar la session
         this.get('/logout', async (req, res) => {
-            res.clearCookie('authCookie'); // Elimina la cookie del token
+            res.clearCookie('cart'); // Elimina la cookie del token
             return res.redirect('/');
 
         });
