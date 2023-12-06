@@ -1,14 +1,13 @@
 import jwt from 'jsonwebtoken';
 import passportCall from "../middlewares/passportCall.js";
 import BaseRouter from "./BaseRouter.js";
-import dotenv from "dotenv";
+import config from '../config/config.js';
 
-dotenv.config();
 
 class SessionsRouter extends BaseRouter {
     init() {
         // EndPoint para crear un usuario y almacenarlo en la Base de Datos
-        this.post('/register', ['NO_AUTH'], passportCall('register'), { strategyType: 'LOCALS' }, async (req, res) => {
+        this.post('/register', ['NO_AUTH'], passportCall('register', { strategyType: 'LOCALS' }), async (req, res) => {
             res.clearCookie('cart');
             res.sendSuccess('Usuario registrado correctamente');
         })
@@ -22,8 +21,8 @@ class SessionsRouter extends BaseRouter {
                 role: req.user.role,
                 cart: req.user.cart
             }
-            const token = jwt.sign(tokenizedUser, process.env.SECRET_KEY, { expiresIn: '1h' });
-            res.cookie(process.env.COOKIE_KEY, token, { httpOnly: true });
+            const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: '1h' });
+            res.cookie(config.jwt.COOKIE, token);
             res.clearCookie('cart');
             res.sendSuccess('logeado correctamente');
         })
@@ -44,8 +43,8 @@ class SessionsRouter extends BaseRouter {
                     cart: req.user.cart
                 }
 
-                const token = jwt.sign(tokenizedUser, process.env.SECRET_KEY, { expiresIn: '1h' });
-                res.cookie(process.env.COOKIE_KEY, token, { httpOnly: true });
+                const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: '1h' });
+                res.cookie(config.jwt.COOKIE, token);
                 res.clearCookie('cart');
                 return res.redirect('/api/products');
             }

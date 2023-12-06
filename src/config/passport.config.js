@@ -6,9 +6,8 @@ import UserManager from "../dao/mongo/managers/usersManager.js";
 import GithubStrategy from 'passport-github2';
 import cartManager from "../dao/mongo/managers/cartsManager.js";
 import auth from "../services/auth.js";
-import dotenv from "dotenv";
+import config from "./config.js";
 
-dotenv.config();
 
 
 const usersServices = new UserManager();
@@ -21,7 +20,7 @@ const initializeStrategies = () => {
             try {
                 const { firstName, lastName, age } = req.body;
                 if (!firstName || !lastName || !age) return done(null, false, { message: "Valores incompletos" })
-                //Corroborar que el usuario no exista.
+                //Coroborar que el usuario no exista.
                 const exists = await usersServices.getBy({ email });
                 if (exists) return done(null, false, { message: "Usuario ya registrado." });
 
@@ -50,6 +49,15 @@ const initializeStrategies = () => {
     passport.use('login', new LocalStrategy({ usernameField: 'email', session: false }, async (email, password, done) => {
         try {
             if (!email || !password) return done(null, false, { message: "Valores incompletos" });
+            if (email === config.app.ADMIN_EMAIL && password === config.app.ADMIN_PASSWORD) {
+                const adminUser = {
+                    role: 'admin',
+                    id: '0',
+                    firstName: 'admin'
+                }
+                return done(null, adminUser);
+            }
+
             //Aquí el usuario sí debería existir, corroborar primero.
             const user = await usersServices.getBy({ email });
             if (!user) return done(null, false, { message: "Credenciales Incorrectas" });
@@ -87,7 +95,7 @@ const initializeStrategies = () => {
 
     passport.use('jwt', new Strategy({
         jwtFromRequest: ExtractJwt.fromExtractors([auth.cookieExtractor]),
-        secretOrKey: process.env.SECRET_KEY
+        secretOrKey: config.jwt.SECRET
     }, async (payload, done) => {
         return done(null, payload);
     }))
@@ -101,8 +109,6 @@ const initializeStrategies = () => {
         const user = await usersServices.getBy({ _id: id });
         done(null, user);
     })
-
-
 }
 
 export default initializeStrategies;

@@ -3,13 +3,14 @@ import productsManager from "../dao/mongo/managers/productsManager.js";
 import uploader from "../services/uploadService.js";
 import { getValidFilters } from "../utils.js";
 import passportCall from "../middlewares/passportCall.js";
+import config from '../config/config.js';
 
 const productsService = new productsManager();
 
 class ProductsRouter extends BaseRouter {
   init() {
     // EndPoint para traer todos los productos
-    this.get('/', ['PUBLIC'], passportCall('jwt', { strategyType: 'JWT' }), async (req, res) => {
+    this.get('/', ['PUBLIC'], async (req, res) => {
       let { page = 1, limit = 4, sort, ...filters } = req.query;
       const cleanFilters = getValidFilters(filters, 'product')
 
@@ -68,7 +69,7 @@ class ProductsRouter extends BaseRouter {
         stock,
         price
       }
-      const thumbnail = req.files.map(file => `${req.protocol}://${req.hostname}:${process.env.PORT || 8080}/img/${file.filename}`);
+      const thumbnail = req.files.map(file => `${req.protocol}://${req.hostname}:${config.app.PORT}/img/${file.filename}`);
       newProduct.thumbnail = thumbnail
 
       const result = await productsService.addProduct(newProduct);

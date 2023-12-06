@@ -3,7 +3,6 @@ import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 import "./dao/mongo/dbConfig.js";
 
-
 import viewsRouter from "./routes/views.router.js";
 import SessionsRouter from "./routes/SessionsRouter.js";
 import productsRouter from "./routes/products.router.js";
@@ -11,9 +10,10 @@ import cartsRouter from "./routes/carts.router.js";
 
 import __dirname from "./utils.js";
 import initializeStrategies from "./config/passport.config.js";
+import config from "./config/config.js";
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = config.app.PORT;
 
 app.listen(PORT, () =>console.log(`Servidor escuchando en el puerto ${PORT}`));
 
