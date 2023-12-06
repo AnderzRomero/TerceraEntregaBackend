@@ -13,7 +13,6 @@ form.addEventListener('submit', async e => {
         }
     })
     const result = await response.json();
-    console.log("Informacion usuario", result);
     if (result.status === "success") {
         // Redirige a la ruta deseada
         window.location.href = '/api/products';
