@@ -1,8 +1,7 @@
 import BaseRouter from './BaseRouter.js';
+import { getValidFilters } from "../utils.js";
 import productsManager from "../dao/mongo/managers/productsManager.js";
 import uploader from "../services/uploadService.js";
-import { getValidFilters } from "../utils.js";
-import passportCall from "../middlewares/passportCall.js";
 import config from '../config/config.js';
 
 const productsService = new productsManager();
@@ -35,7 +34,6 @@ class ProductsRouter extends BaseRouter {
         totalPages: pagination.totalPages
       });
     });
-
     // EndPoint para traer producto por ID
     this.get("/:pid", ['PUBLIC'], async (req, res) => {
       const { pid } = req.params;

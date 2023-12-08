@@ -11,6 +11,17 @@ const productService = new productsManager();
 
 class CartsRouter extends BaseRouter {
   init() {
+    this.get("/", ['USER'], async (req, res) => {
+      const cid = req.user.cart;
+      const cart = await cartService.getCartById({ _id: cid });
+      if (!cart) return res.status(400).send({ status: "error", error: "Carrito no encontrado" });
+      res.render('Carts',{
+        css: 'products',
+        cart: cart
+      })
+
+    })
+
     this.get("/:cid", ['USER'], async (req, res) => {
       const { cid } = req.params;
       const cart = await cartService.getCartById({ _id: cid });
@@ -68,7 +79,7 @@ class CartsRouter extends BaseRouter {
         productExisteInCarrito.quantity += 1;
 
         // Guardar los cambios en el carrito
-        await cartService.updateProductQuantity({ _id: cid }, cart.products);
+        await cartService.updateProductQuantity({ _id: req.user.cart }, cart.products);
 
         // Retornar una respuesta exitosa
         return res.status(200).send({ status: 'success', message: 'Cantidad del producto incrementada en el carrito' });
@@ -76,12 +87,12 @@ class CartsRouter extends BaseRouter {
         cart.products.push({
           _id: pid
         })
-        await cartModel.updateOne({ _id: cid }, { $set: { products: cart.products } });
+        await cartModel.updateOne({ _id: req.user.cart }, { $set: { products: cart.products } });
         res.send({ status: "success", message: "Producto agregado al carro" });
       }
     })
 
-    this.delete('/:cid/products/:pid', async (req, res) => {
+    this.delete('/:cid/products/:pid', ['ADMIN'], async (req, res) => {
       const { cid, pid } = req.params;
 
       try {

@@ -34,10 +34,6 @@ export default class cartManager {
     }
   }
 
-  // addProductInCart = async (id, newProducts) => {
-  //   return cartModel.updateOne({ _id: id }, { $set: newProducts });
-  // };
-
   updateCart = async (cartId, newProducts) => {
     try {
       const existingCart = await cartModel.findById(cartId);

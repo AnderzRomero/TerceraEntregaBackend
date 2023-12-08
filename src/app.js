@@ -3,10 +3,10 @@ import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 import "./dao/mongo/dbConfig.js";
 
-import viewsRouter from "./routes/views.router.js";
+import viewsRouter from "./routes/ViewsRouter.js";
 import SessionsRouter from "./routes/SessionsRouter.js";
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
+import productsRouter from "./routes/ProductsRouter.js";
+import cartsRouter from "./routes/CartsRouter.js";
 
 import __dirname from "./utils.js";
 import initializeStrategies from "./config/passport.config.js";

@@ -81,11 +81,18 @@ const initializeStrategies = () => {
 
         const user = await usersServices.getBy({ email });
         if (!user) {
+            let cart;
+
             const newUser = {
                 firstName: name,
                 email,
                 password: ''
             }
+            const cartResult = await cartsServices.addCart();
+            cart = cartResult._id
+
+            newUser.cart = cart;
+
             const result = await usersServices.create(newUser);
             done(null, result);
         } else {
@@ -99,16 +106,6 @@ const initializeStrategies = () => {
     }, async (payload, done) => {
         return done(null, payload);
     }))
-
-
-    passport.serializeUser((user, done) => {
-        return done(null, user._id);
-    })
-
-    passport.deserializeUser(async (id, done) => {
-        const user = await usersServices.getBy({ _id: id });
-        done(null, user);
-    })
 }
 
 export default initializeStrategies;

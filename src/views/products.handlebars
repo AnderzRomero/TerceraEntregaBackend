@@ -1,6 +1,11 @@
 <h1 class="container-fluid">Lista de Productos</h1>
+{{#if user}}
 <h2 class="container-fluid">Bienvenido {{user.name}} Tienes el rol de :{{user.role}}</h2>
 <a href="/api/sessions/logout"><button>Cerrar Session</button></a>
+<a href="/api/carts"><button>Ir al carrito</button></a>
+{{else}}
+<a href="/login"><button>Iniciar Session</button></a>
+{{/if}}
 <br>
 
 <div class="container">
@@ -27,13 +32,13 @@
 
 <div class="paginationPanel">
     {{#if hasPrevPage}}
-    <a href="/api/products?page={{prevPage}}"><button>Anterior</button></a>
+    <a href="/?page={{prevPage}}"><button>Anterior</button></a>
     {{/if}}
 
     <h5>Pagina: {{page}}</h5>
 
     {{#if hasNextPage}}
-    <a href="/api/products?page={{nextPage}}"><button>Siguiente</button></a>
+    <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
     {{/if}}
 </div>
 

@@ -31,13 +31,13 @@ class SessionsRouter extends BaseRouter {
             res.sendSuccessWithPayload(req.user);
         })
         // EndPoints para autenticacion de terceros
-        this.get('/github', passportCall('github', { strategyType: 'LOCALS' }), async (req, res) => { });   //Trigger de mi estartegia de passport
-        this.get('/githubcallback', passportCall('github', { strategyType: 'LOCALS' }), async (req, res) => {
+        this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), async (req, res) => { });   //Trigger de mi estartegia de passport
+        this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), async (req, res) => {
             if (!req.user) {
                 return res.status(403).sendError("No se pudo autenticar");
             } else {
                 const tokenizedUser = {
-                    name: `${req.user.firstName} ${req.user.lastName}`,
+                    name: `${req.user.firstName}`,
                     id: req.user._id,
                     role: req.user.role,
                     cart: req.user.cart
@@ -50,8 +50,8 @@ class SessionsRouter extends BaseRouter {
             }
         })
         // EndPoint para Finalizar la session
-        this.get('/logout', ['NO_AUTH'], async (req, res) => {
-            res.clearCookie('cart'); // Elimina la cookie del token
+        this.get('/logout', ['USER'], async (req, res) => {
+            res.clearCookie('authCookie'); // Elimina la cookie del token
             return res.redirect('/');
 
         });

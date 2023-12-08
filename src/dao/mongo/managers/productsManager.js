@@ -1,6 +1,10 @@
 import productModel from "../models/product.model.js"
 
 export default class productsManager {
+
+    getProducts = (params) => {
+        return productModel.find(params).lean();
+      };
    
     paginateProducts = async (params, paginateOptions) => {
         return productModel.paginate(params, paginateOptions);

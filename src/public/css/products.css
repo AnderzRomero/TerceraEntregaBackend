@@ -25,28 +25,6 @@ li {
   margin: 0.5rem 1rem;
   cursor: pointer;
 }
-
-/* li a {
-  border-radius: 0.5rem;
-  padding: 0.6rem;
-  color: white;
-  text-decoration: none;
-  font-size: 1.5rem;
-}
-
-li:last-child a {
-  margin-right: 0;
-}
-
-a:hover {
-  background: rgb(43, 42, 41);
-}
-
-a:active {
-  background: white;
-  color: black;
-} */
-
 .container-fluid {
   width: 30% !important;
 }
