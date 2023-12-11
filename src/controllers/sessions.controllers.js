@@ -32,7 +32,25 @@ const infoUser = async (req, res) => {
     }
 }
 
-const loginTerceros = async (req, res) => {
+const loginTercerosGitHub = async (req, res) => {
+    if (!req.user) {
+        return res.status(403).sendError("No se pudo autenticar");
+    } else {
+        const tokenizedUser = {
+            name: `${req.user.firstName}`,
+            id: req.user._id,
+            role: req.user.role,
+            cart: req.user.cart
+        }
+
+        const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: '1h' });
+        res.cookie(config.jwt.COOKIE, token);
+        res.clearCookie('cart');
+        return res.redirect('/api/products');
+    }
+}
+
+const loginTercerosGoogle = async (req, res) => {
     if (!req.user) {
         return res.status(403).sendError("No se pudo autenticar");
     } else {
@@ -59,7 +77,8 @@ export default {
     createUser,
     Login,
     infoUser,
-    loginTerceros,
+    loginTercerosGitHub,
+    loginTercerosGoogle,
     logout
 }
 

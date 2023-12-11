@@ -12,9 +12,12 @@ class SessionsRouter extends BaseRouter {
         this.post('/login', ['NO_AUTH'], passportCall('login', { strategyType: 'JWT' }), sessionsControllers.Login);
         // EndPoint para obtener la informacion del usuario
         this.get('/current', ['AUTH'], sessionsControllers.infoUser);
-        // EndPoints para autenticacion de terceros
-        this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }));   //Trigger de mi estartegia de passport
-        this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), sessionsControllers.loginTerceros);
+        // EndPoints para autenticacion de terceros con GitHub
+        this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), async (req, res) => { });   //Trigger de mi estartegia de passport
+        this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), sessionsControllers.loginTercerosGitHub);
+        // EndPoints para autenticacion de terceros con Google
+        this.get('/google', ['NO_AUTH'], passportCall('google', { scope: ['profile', 'email'], strategyType: 'LOCALS' }), async (req, res) => { });   //Trigger de mi estartegia de passport
+        this.get('/googlecallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), sessionsControllers.loginTercerosGoogle);
         // EndPoint para Finalizar la session
         this.get('/logout', ['USER'], sessionsControllers.logout);
     }

@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as Strategy, ExtractJwt } from "passport-jwt";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import UserManager from "../dao/mongo/managers/usersManager.js";
 import GithubStrategy from 'passport-github2';
@@ -98,6 +99,15 @@ const initializeStrategies = () => {
         } else {
             done(null, user);
         }
+    }))
+
+    passport.use('google', new GoogleStrategy({
+        clientID: '28030746378-veb659t378a6k238u3et5g3un48q198b.apps.googleusercontent.com',
+        clientSecret: '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',
+        callbackURL: 'http://localhost:8080/api/sessions/googlecallback'
+    }, async (accessToken, refreshToken, profile, done) => {
+        const { email } = profile._json;
+        done(null, false);
     }))
 
     passport.use('jwt', new Strategy({
