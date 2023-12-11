@@ -1,11 +1,11 @@
 import cartModel from "../models/cart.model.js"
 
 export default class cartManager {
-  getCarts = (params) => {
+  get = (params) => {
     return cartModel.find(params).lean();
   }
 
-  getCartById = async (cartId) => {
+  getBy = async (cartId) => {
     try {
       const cart = await cartModel.findById(cartId).lean();
 
@@ -19,7 +19,7 @@ export default class cartManager {
   }
 
 
-  addCart = async (products) => {
+  create = async (products) => {
     try {
       let cartData = {};
       if (products && products.length > 0) {
@@ -34,7 +34,7 @@ export default class cartManager {
     }
   }
 
-  updateCart = async (cartId, newProducts) => {
+  update = async (cartId, newProducts) => {
     try {
       const existingCart = await cartModel.findById(cartId);
       if (!existingCart) throw new Error(`No se encontró el carrito con ID ${cartId}`);

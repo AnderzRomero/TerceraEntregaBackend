@@ -1,17 +1,15 @@
 async function addProduct(id) {
     const cart = getCookie('cart');
-    if (cart) {//Mientras haya librería temporal, es porque no hay usuario
+    if (cart) {//Mientras haya carrito temporal, es porque no hay usuario
         const response = await fetch(`/api/carts/${cart}/products/${id}`, {
             method: 'PUT'
         })
-        const result = await response.json();
-        console.log(result);
+        const result = await response.json();        
     } else {//Si no encontró la cookie, es porque ya hay un usuario
         const response = await fetch(`/api/carts/products/${id}`, {
             method: 'PUT'
         })
-        const result = await response.json();
-        console.log(result);
+        const result = await response.json();        
     }
 }
 

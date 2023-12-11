@@ -2,7 +2,7 @@ import productModel from "../models/product.model.js"
 
 export default class productsManager {
 
-    getProducts = (params) => {
+    get = (params) => {
         return productModel.find(params).lean();
       };
    
@@ -10,19 +10,19 @@ export default class productsManager {
         return productModel.paginate(params, paginateOptions);
     }    
 
-    getProductBy = (params) => {
+    getBy = (params) => {
         return productModel.findOne(params).lean();
     }
 
-    addProduct = (product) => {
+    create = (product) => {
         return productModel.create(product);
     }
 
-    updateProduct = (id, product) => {
+    update = (id, product) => {
         return productModel.updateOne({ _id: id }, { $set: product });
     }
 
-    deleteProduct = async (id) => {
+    delete = async (id) => {
         try {
             const updatedProduct = await productModel.findByIdAndUpdate(
                 id,

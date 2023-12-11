@@ -20,7 +20,7 @@ Este es un proyecto de ecommerce básico que se utiliza para el curso de Program
 > 1. Clona el repositorio a tu máquina local.
 > 2. Abre una terminal en el directorio del proyecto.
 > 3. Ejecuta el comando `npm init -y` para generar los paquetes del proyecto.
-> 4. Ejecuta el comando `npm install express express-handlebars nodemon mongoose multer dotenv mongoose-paginate-v2 cookie-parser commander connect-mongo bcrypt passport passport-local passport-github2 jsonwebtoken` para instalar las dependencias necesarias para el funcionamiento.
+> 4. Ejecuta el comando `npm install express express-handlebars nodemon mongoose multer dotenv mongoose-paginate-v2 cookie-parser commander connect-mongo bcrypt passport passport-local passport-jwt passport-github2 jsonwebtoken` para instalar las dependencias necesarias para el funcionamiento.
 > 5. Ejecuta el comando `npm run dev`  para iniciar la aplicación.
 > 7. Abre tu navegador y navega a http://localhost:8080 para ver la aplicación en acción.
 
