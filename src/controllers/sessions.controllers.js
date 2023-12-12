@@ -54,8 +54,9 @@ const loginTercerosGoogle = async (req, res) => {
     if (!req.user) {
         return res.status(403).sendError("No se pudo autenticar");
     } else {
+        // Guardamos el usuario en la base de datos si no existe
         const tokenizedUser = {
-            name: `${req.user.firstName}`,
+            name: `${req.user.firstName} ${req.user.lastName}`,
             id: req.user._id,
             role: req.user.role,
             cart: req.user.cart

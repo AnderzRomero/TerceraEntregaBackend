@@ -34,7 +34,7 @@ const initializeStrategies = () => {
                 if (req.cookies['cart']) {//Obtener la que ya está de la cookie
                     cart = req.cookies['cart'];
                 } else { //Crear una nueva librería en la base de datos
-                    cartResult = await cartsServices.addCart();
+                    cartResult = await cartsServices.create();
                     cart = cartResult._id
                 }
                 newUser.cart = cart;
@@ -89,7 +89,7 @@ const initializeStrategies = () => {
                 email,
                 password: ''
             }
-            const cartResult = await cartsServices.addCart();
+            const cartResult = await cartsServices.create();
             cart = cartResult._id
 
             newUser.cart = cart;
@@ -102,13 +102,39 @@ const initializeStrategies = () => {
     }))
 
     passport.use('google', new GoogleStrategy({
-        clientID: '28030746378-veb659t378a6k238u3et5g3un48q198b.apps.googleusercontent.com',
-        clientSecret: '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',
-        callbackURL: 'http://localhost:8080/api/sessions/googlecallback'
-    }, async (accessToken, refreshToken, profile, done) => {
-        const { email } = profile._json;
-        done(null, false);
+        clientID: config.google.CLIENT,
+        clientSecret: config.google.SECRET,
+        callbackURL: 'http://localhost:8080/api/sessions/googlecallback',
+        passReqToCallback: true
+    }, async (req, accessToken, refreshToken, profile, done) => {
+        const { _json } = profile;
+        const user = await usersServices.getBy({ email: _json.email });
+        console.log(user);
+        if (user) {
+            return done(null, user);
+        } else {
+            const newUser = {
+                firstName: _json.given_name,
+                lastName: _json.family_name,
+                email: _json.email
+            }
+            //Revisar la librería temporal
+            let cart;
+
+            if (req.cookies['cart']) {//Obtener la que ya está de la cookie
+                cart = req.cookies['cart'];
+            } else { //Crear una nueva librería en la base de datos
+                cartResult = await cartsServices.create();
+                cart = cartResult._id
+            }
+            newUser.cart = cart;
+
+            const result = await usersServices.create(newUser);
+            done(null, result);
+        }
     }))
+
+
 
     passport.use('jwt', new Strategy({
         jwtFromRequest: ExtractJwt.fromExtractors([auth.cookieExtractor]),

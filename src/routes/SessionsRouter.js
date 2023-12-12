@@ -17,7 +17,7 @@ class SessionsRouter extends BaseRouter {
         this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), sessionsControllers.loginTercerosGitHub);
         // EndPoints para autenticacion de terceros con Google
         this.get('/google', ['NO_AUTH'], passportCall('google', { scope: ['profile', 'email'], strategyType: 'LOCALS' }), async (req, res) => { });   //Trigger de mi estartegia de passport
-        this.get('/googlecallback', ['NO_AUTH'], passportCall('github', { strategyType: 'LOCALS' }), sessionsControllers.loginTercerosGoogle);
+        this.get('/googlecallback', ['NO_AUTH'], passportCall('google', { strategyType: 'LOCALS' }), sessionsControllers.loginTercerosGoogle);
         // EndPoint para Finalizar la session
         this.get('/logout', ['USER'], sessionsControllers.logout);
     }

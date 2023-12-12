@@ -26,5 +26,9 @@ export default {
     jwt: {
         COOKIE: process.env.JWT_COOKIE,
         SECRET: process.env.JWT_SECRET
+    },
+    google:{
+        CLIENT: process.env.GOOGLE_CLIENT,
+        SECRET:process.env.GOOGLE_SECRET,
     }
 }
