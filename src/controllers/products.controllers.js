@@ -1,6 +1,6 @@
 import { productsService } from "../services/index.js";
-import { getValidFilters } from "../utils.js"
-import config from "../config/config.js";
+import { getValidFilters } from "../utils.js";
+import CloudStorageService from "../services/CloudStorageService.js";
 
 const getproducts = async (req, res) => {
     let { page = 1, limit = 4, sort, ...filters } = req.query;
@@ -58,10 +58,20 @@ const createProduct = async (req, res) => {
         stock,
         price
     }
-    const thumbnail = req.files.map(file => `${req.protocol}://${req.hostname}:${config.app.PORT}/img/${file.filename}`);
-    newProduct.thumbnail = thumbnail
 
-    const result = await productsService.addProduct(newProduct);
+    const googleStorageService = new CloudStorageService();
+    const thumbnail = []
+
+    for (const file of req.files) {
+        const url = await googleStorageService.uploadFileToCloudStorage(file);
+        thumbnail.push(url);
+    }
+
+    console.log(thumbnail);
+
+    newProduct.thumbnail = thumbnail
+    //Ya creé el objeto, ya mapeé las imágenes, ahora sí, inserto en la base
+    const result = await productsService.createProduct(newProduct);
     res.send({ status: "success", payload: result._id });
 }
 

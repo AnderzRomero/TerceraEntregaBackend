@@ -3,16 +3,14 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as Strategy, ExtractJwt } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
-import UserManager from "../dao/mongo/managers/usersManager.js";
+import UsersDao from "../dao/mongo/managers/usersDao.js";
 import GithubStrategy from 'passport-github2';
-import cartManager from "../dao/mongo/managers/cartsManager.js";
+import CartsDao from "../dao/mongo/managers/cartsDao.js";
 import auth from "../services/auth.js";
 import config from "./config.js";
 
-
-
-const usersServices = new UserManager();
-const cartsServices = new cartManager();
+const usersServices = new UsersDao();
+const cartsServices = new CartsDao();
 
 const initializeStrategies = () => {
 

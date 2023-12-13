@@ -1,6 +1,6 @@
 import messageModel from "../models/message.model.js";
 
-export default class ChatManager {
+export default class ChatDao {
 
   getMessages = async () => {
     try {

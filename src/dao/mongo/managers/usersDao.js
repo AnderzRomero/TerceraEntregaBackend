@@ -1,6 +1,6 @@
 import userModel from "../models/user.model.js";
 
-export default class UserManager {
+export default class UsersDao {
     get = (params) => {
         return userModel.find(params).lean();
     }

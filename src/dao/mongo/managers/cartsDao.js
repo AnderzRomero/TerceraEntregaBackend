@@ -1,6 +1,6 @@
 import cartModel from "../models/cart.model.js"
 
-export default class cartManager {
+export default class cartDao {
   get = (params) => {
     return cartModel.find(params).lean();
   }

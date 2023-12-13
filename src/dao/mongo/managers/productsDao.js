@@ -1,6 +1,6 @@
 import productModel from "../models/product.model.js"
 
-export default class productsManager {
+export default class productsDao {
 
     get = (params) => {
         return productModel.find(params).lean();
