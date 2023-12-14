@@ -24,6 +24,4 @@ export default class CartsRepository {
     removeProductFromCart = (cartId, productId) => {
         return this.dao.removeProductFromCart(cartId, productId);
     }
-
-
 }
