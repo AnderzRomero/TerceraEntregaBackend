@@ -1,14 +1,14 @@
 import dotenv from 'dotenv'
-import { Command} from 'commander'
+import { Command } from 'commander'
 
 const program = new Command();
-program.option('-m, --mode <mode>','Modo de trabajo','production')
-.option('-p <port>','Puerto del servidor', 8080)
+program.option('-m, --mode <mode>', 'Modo de trabajo', 'production')
+    .option('-p <port>', 'Puerto del servidor', 8080)
 
 program.parse();
 
 dotenv.config({
-    path:program.opts().mode==="dev"?'./.env.dev':'./.env.prod'
+    path: program.opts().mode === "dev" ? './.env.dev' : './.env.prod'
 })
 
 export default {
@@ -16,7 +16,7 @@ export default {
         PORT: process.env.PORT || 8080,
         ADMIN_EMAIL: process.env.ADMIN_EMAIL,
         ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
-        PERSISTENCE: process.env.PERSISTENCE||'MONGO'
+        PERSISTENCE: process.env.PERCISTENCE || 'MONGO'
     },
     mongo: {
         URL: process.env.MONGO_URL || 'localhost:27017',
@@ -28,9 +28,9 @@ export default {
         COOKIE: process.env.JWT_COOKIE,
         SECRET: process.env.JWT_SECRET
     },
-    google:{
+    google: {
         CLIENT: process.env.GOOGLE_CLIENT,
-        SECRET:process.env.GOOGLE_SECRET,
+        SECRET: process.env.GOOGLE_SECRET,
         KEY_FILE: process.env.GOOGLE_KEY_FILE,
         BUCKET_NAME: process.env.GOOGLE_BUCKET_NAME
     }
