@@ -1,4 +1,4 @@
-import cartModel from "../models/cart.model.js"
+import cartModel from "./models/cart.model.js"
 
 export default class cartDao {
   get = (params) => {
@@ -17,7 +17,6 @@ export default class cartDao {
       throw error;
     }
   }
-
 
   create = async (products) => {
     try {

@@ -1,5 +1,5 @@
 import express from "express";
-import handlebars from "express-handlebars";
+import exphbs from 'express-handlebars';
 import cookieParser from "cookie-parser";
 import "./dao/mongo/dbConfig.js";
 import { Server } from "socket.io";
@@ -25,7 +25,22 @@ app.use(express.json());
 app.use(cookieParser());
 
 //configuracion de handlebars
-app.engine("handlebars", handlebars.engine());
+const hbs = exphbs.create({
+    helpers:
+    {
+        sumPrice: function (products) {
+            let total = 0;
+            for (const product of products) {
+                total += product._id.price * product.quantity;
+            }
+            return total;
+        }
+    }
+});
+
+hbs.allowProtoPropertiesByDefault = true;
+
+app.engine("handlebars", hbs.engine); // Usa hbs.engine en lugar de handlebars.engine()
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
 

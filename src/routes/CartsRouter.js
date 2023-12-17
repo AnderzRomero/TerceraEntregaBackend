@@ -7,6 +7,8 @@ class CartsRouter extends BaseRouter {
     this.get("/", ['USER'], cartsControllers.getCart);
     // Endpoint para crear carrito
     this.post("/", ['ADMIN'], cartsControllers.createCart);
+    // Endpoint para crear tickets
+    this.post("/:cid/purchase", ['USER'], cartsControllers.purchaseCart);
     // Endpoint para actualizar o agregar producto al carrito sin iniciar session
     this.put('/:cid/products/:pid', ['NO_AUTH'], cartsControllers.updateProductInCartNO_AUTH);
     // Endpoint para actualizar o agregar producto al carrito Autenticado

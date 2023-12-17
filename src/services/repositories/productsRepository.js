@@ -1,7 +1,6 @@
 export default class ProductsRepository {
     constructor(dao){
         this.dao = dao;
-        console.log("Esto trae el dao: ", dao);
     }
 
     getProducts = (params) =>{
