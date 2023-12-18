@@ -10,7 +10,7 @@ Este es un proyecto de ecommerce básico que se utiliza para el curso de Program
 - Ver una lista de productos disponibles
 - Agregar productos al carrito de compras
 - Ver el carrito de compras
-<!-- - Realizar una orden de compra -->
+- Realizar una orden de compra
 
 ## Instalación
 

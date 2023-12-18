@@ -27,35 +27,42 @@ const purchaseCart = async (req, res) => {
         const sumProducts = req.body.sumTotalPrice;
         const cart = await cartsService.getCartBy({ _id: cartId });
 
+        console.log("Lo que trae el carrito", cart);
+
         if (!cartId) return res.status(404).send("Error: Carrito no encontrado");
 
         // Verifica el stock de cada producto en el carrito
         const productsInCart = cart.products;
         const purchasedProducts = []; // Almacenará los productos comprados
-        
+
         for (const productInCart of productsInCart) {
             const productId = productInCart._id._id;
             const product = await productsService.getProductBy(productId);
-            console.log("Id del producto en el carro",product);
+            console.log("Id del producto en el carro", product);
 
             if (!product) return res.status(404).send("Error: Producto no encontrado");
             if (product.stock >= productInCart.quantity) purchasedProducts.push(productInCart);
 
             product.stock -= productInCart.quantity;
-            // const updateProduct = await productsService.updateProduct(productId, product);
+
+            // Antes de llamar a la función updateProduct, verifica y convierte category a un string si es un array
+            if (Array.isArray(product.category)) {
+                product.category = product.category.join(', '); // Convierte el array a string separado por comas (u otro delimitador deseado)
+            }
+            const updateProduct = await productsService.updateProduct(productId, product);
         }
 
-        console.log("Almacen de productos comprados",purchasedProducts);
-        console.log("Stock de productos despues de comprar productos al carrito",productsInCart);
+        console.log("Almacen de productos comprados", purchasedProducts);
+        console.log("Stock de productos despues de comprar productos al carrito", productsInCart);
 
-        // // Actualiza el carrito con los productos que no se compraron
+        // Actualiza el carrito con los productos que no se compraron
         // const updatedProducts = productsInCart.filter(productInCart => !purchasedProducts.includes(productInCart));
         // cart.products = updatedProducts;
         // await cart.save();
 
-        // const ticket = await ticketsService.createTicket(userId, cartId, sumProducts);
+        const ticket = await ticketsService.createTicket(userId, cartId, sumProducts);
 
-        // console.log(ticket);
+        console.log(ticket);
         return res.status(200).send("Compra exitosa");
     } catch (error) {
         return res.status(500).send("Error en servidor: " + error.message);
