@@ -11,7 +11,7 @@ class ProductsRouter extends BaseRouter {
     // EndPoint para crear producto 
     this.post("/", ['ADMIN'], uploader.array('thumbnail'), productsControllers.createProduct);
     // EndPoint para Actualizar producto por ID
-    this.put("/:pid", ['USER'], productsControllers.updateProductBy);
+    this.put("/:pid", ['ADMIN'], productsControllers.updateProductBy);
     // EndPoint para eliminar producto por ID
     this.delete("/:pid", ['ADMIN'], productsControllers.deleteProductBy);
   }

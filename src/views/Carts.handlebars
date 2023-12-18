@@ -39,36 +39,4 @@
     {{/if}}
 </div>
 </ul>
-{{!-- <script>
-    const buy_cart = ()=> 
-    {
-        let token = localStorage.getItem('accessToken');
-        let cartId = "{{cart.id}}";
-        let sumTotalPrice = {{sumPrice cart.products}};
-        const url = '/api/carts/' + cartId + '/purchase';
-
-        const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ sumTotalPrice: sumTotalPrice })
-        };
-
-        fetch(url, requestOptions)
-            .then(response => {
-                return response.text(); 
-            })
-            .then(result => {
-                if( result === "Compra exitosa")
-                {
-                    alert("whyt?")
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-</script> --}}
 <script src="/js/carts.js"></script>

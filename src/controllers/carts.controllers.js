@@ -22,12 +22,11 @@ const createCart = async (req, res) => {
 
 const purchaseCart = async (req, res) => {
     try {
-        const userId = req.user.id;
+        // const userId = req.user.id;
         const cartId = req.user.cart;
+        // const purchaser = req.user.email;
         const sumProducts = req.body.sumTotalPrice;
         const cart = await cartsService.getCartBy({ _id: cartId });
-
-        console.log("Lo que trae el carrito", cart);
 
         if (!cartId) return res.status(404).send("Error: Carrito no encontrado");
 
@@ -47,22 +46,35 @@ const purchaseCart = async (req, res) => {
 
             // Antes de llamar a la función updateProduct, verifica y convierte category a un string si es un array
             if (Array.isArray(product.category)) {
-                product.category = product.category.join(', '); // Convierte el array a string separado por comas (u otro delimitador deseado)
+                product.category = product.category.join(', '); // Convierte el array a string separado por comas 
             }
             const updateProduct = await productsService.updateProduct(productId, product);
         }
+        //Actualiza el carrito con los productos que no se compraron
+        const updatedProducts = productsInCart.filter(productInCart => !purchasedProducts.includes(productInCart));
 
-        console.log("Almacen de productos comprados", purchasedProducts);
-        console.log("Stock de productos despues de comprar productos al carrito", productsInCart);
+        console.log(updatedProducts);
+        // await cartsService.updateCart(cartId, {products: updatedProducts});
 
-        // Actualiza el carrito con los productos que no se compraron
-        // const updatedProducts = productsInCart.filter(productInCart => !purchasedProducts.includes(productInCart));
-        // cart.products = updatedProducts;
-        // await cart.save();
+        // const {
+        //     code,
+        //     purchase_datetime,
+        //     amount,
+        //     purchaser
+        // } = req.body;
 
-        const ticket = await ticketsService.createTicket(userId, cartId, sumProducts);
+        // const newTicket = {
+        //     code,
+        //     purchase_datetime,
+        //     amount: sumProducts,            
+        //     purchaser: req.user.email           
+        // }
 
-        console.log(ticket);
+        // console.log("Esto son los datos del ticket: ",  newTicket);
+
+        // const ticket = await ticketsService.createTicket(newTicket);
+
+        // console.log(ticket);
         return res.status(200).send("Compra exitosa");
     } catch (error) {
         return res.status(500).send("Error en servidor: " + error.message);

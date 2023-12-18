@@ -67,8 +67,6 @@ const createProduct = async (req, res) => {
         thumbnail.push(url);
     }
 
-    console.log(thumbnail);
-
     newProduct.thumbnail = thumbnail
     //Ya creé el objeto, ya mapeé las imágenes, ahora sí, inserto en la base
     const result = await productsService.createProduct(newProduct);
