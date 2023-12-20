@@ -1,7 +1,6 @@
 import { cartsService } from "../services/index.js";
 import { productsService } from "../services/index.js";
 import { ticketsService } from "../services/index.js";
-import cartModel from "../dao/mongo/models/cart.model.js";
 import __dirname from "../utils.js";
 
 const getCart = async (req, res) => {
@@ -9,9 +8,28 @@ const getCart = async (req, res) => {
     const cart = await cartsService.getCartBy({ _id: cid });
     if (!cart) return res.status(400).send({ status: "error", error: "Carrito no encontrado" });
     res.render('Carts', {
-        css: 'products',
+        css: 'carts',
         cart: cart
     })
+}
+
+const getCartCompra = async (req, res) => {
+    try {
+        const cod  = req.body.code;
+        console.log("Codigo del ticket", cod);
+        // const ticket = await ticketsService.getTicketsBy({ code: cod });
+        // console.log(ticket);
+
+        // const { cid } = req.params;
+        // const cart = await cartsService.getCartBy({ _id: cid });
+        // if (!cart) return res.status(404).send({ status: "error", message: "Cart not found" });
+        res.render('tickets', {
+            css: 'products'
+
+        });
+    } catch (error) {
+        res.status(400).send({ status: "error", message: "Carrito no encontrado estoy aqui" });
+    }
 }
 
 const createCart = async (req, res) => {
@@ -22,62 +40,67 @@ const createCart = async (req, res) => {
 
 const purchaseCart = async (req, res) => {
     try {
-        // const userId = req.user.id;
+        const user = req.user;
         const cartId = req.user.cart;
-        // const purchaser = req.user.email;
-        const sumProducts = req.body.sumTotalPrice;
-        const cart = await cartsService.getCartBy({ _id: cartId });
+        const productPurchase = []; // Almacenará los productos comprados
+        const productNotPurchased = []; // Almacenará los productos que no tienen Stock
 
-        if (!cartId) return res.status(404).send("Error: Carrito no encontrado");
+        try {
+            const cart = await cartsService.getCartBy({ _id: cartId });
 
-        // Verifica el stock de cada producto en el carrito
-        const productsInCart = cart.products;
-        const purchasedProducts = []; // Almacenará los productos comprados
+            if (!cart) return res.status(404).send({ status: "error", message: "Carrito no encontrado" });
 
-        for (const productInCart of productsInCart) {
-            const productId = productInCart._id._id;
-            const product = await productsService.getProductBy(productId);
-            console.log("Id del producto en el carro", product);
+            // Verifica el stock de cada producto en el carrito
+            const productsInCart = cart.products;
 
-            if (!product) return res.status(404).send("Error: Producto no encontrado");
-            if (product.stock >= productInCart.quantity) purchasedProducts.push(productInCart);
 
-            product.stock -= productInCart.quantity;
+            for (const productInCart of productsInCart) {
+                const productId = productInCart._id._id;
+                const product = await productsService.getProductBy(productId);
 
-            // Antes de llamar a la función updateProduct, verifica y convierte category a un string si es un array
-            if (Array.isArray(product.category)) {
-                product.category = product.category.join(', '); // Convierte el array a string separado por comas 
+                if (!product) {
+                    console.log("No se ha podido obtener el producto con id ", productId);
+                    continue;
+                }
+                if (productInCart.quantity > product.stock) {
+                    productNotPurchased.push(productInCart);
+                    continue;
+                }
+
+                product.stock -= productInCart.quantity;
+
+                await productsService.updateProduct(productId, { stock: product.stock });
+                productPurchase.push(productInCart);
             }
-            const updateProduct = await productsService.updateProduct(productId, product);
+        } catch (error) {
+            return res.status(500).send({ status: "error", message: " A ocurrido un error, mientras procesamos la compra" });
         }
-        //Actualiza el carrito con los productos que no se compraron
-        const updatedProducts = productsInCart.filter(productInCart => !purchasedProducts.includes(productInCart));
 
-        console.log(updatedProducts);
-        // await cartsService.updateCart(cartId, {products: updatedProducts});
+        const total = productPurchase.reduce((acc, productInCart) => acc + productInCart._id.price * productInCart.quantity, 0);
 
-        // const {
-        //     code,
-        //     purchase_datetime,
-        //     amount,
-        //     purchaser
-        // } = req.body;
+        const codeTicket = Date.now().toString(15);
 
-        // const newTicket = {
-        //     code,
-        //     purchase_datetime,
-        //     amount: sumProducts,            
-        //     purchaser: req.user.email           
-        // }
+        const newTicket = {
+            code: codeTicket,
+            purchase_datetime: new Date().toISOString(),
+            amount: total,
+            purchaser: user.email,
+            products: productPurchase
+        }
 
-        // console.log("Esto son los datos del ticket: ",  newTicket);
+        console.log("Informacion Ticket:", newTicket);
 
-        // const ticket = await ticketsService.createTicket(newTicket);
-
-        // console.log(ticket);
-        return res.status(200).send("Compra exitosa");
+        try {
+            await ticketsService.createTicket(newTicket);
+            if (productNotPurchased.length > 0) {
+                await cartsService.updateCart({ _id: cartId }, { products: productNotPurchased });
+            }
+        } catch (error) {
+            return res.status(500).send({ status: "error", message: " A ocurrido un error, mientras procesamos la compra segundo" });
+        }
+        return res.status(200).send({ status: "success", message: "Compra exitosa", payload: newTicket });
     } catch (error) {
-        return res.status(500).send("Error en servidor: " + error.message);
+        return res.status(500).send("Error en el servidor: " + error.message);
     }
 }
 
@@ -105,14 +128,16 @@ const updateProductInCartNO_AUTH = async (req, res) => {
         cart.products.push({
             _id: pid
         })
-        await cartModel.updateOne({ _id: cid }, { $set: { products: cart.products } });
+        const newproduct = { products: cart.products };
+        await cartsService.updateCart({ _id: cid }, newproduct);
         res.send({ status: "success", message: "Producto agregado al carro" });
     }
 }
 
 const updateProductInCart = async (req, res) => {
     const { pid } = req.params;
-    const cart = await cartsService.getCartBy({ _id: req.user.cart });
+    const cartId = req.user.cart;
+    const cart = await cartsService.getCartBy({ _id: cartId });
     if (!cart) return res.status(400).send({ status: "error", error: "Carrito no existe" });
     const product = await productsService.getProductBy({ _id: pid });
     if (!product) return res.status(400).send({ status: "error", error: "Producto no existe" })
@@ -125,7 +150,7 @@ const updateProductInCart = async (req, res) => {
         productExisteInCarrito.quantity += 1;
 
         // Guardar los cambios en el carrito
-        await cartsService.updateProductQuantity({ _id: req.user.cart }, cart.products);
+        await cartsService.updateProductQuantity({ _id: cartId }, cart.products);
 
         // Retornar una respuesta exitosa
         return res.status(200).send({ status: 'success', message: 'Cantidad del producto incrementada en el carrito' });
@@ -133,15 +158,17 @@ const updateProductInCart = async (req, res) => {
         cart.products.push({
             _id: pid
         })
-        await cartModel.updateOne({ _id: req.user.cart }, { $set: { products: cart.products } });
+        const newproduct = { products: cart.products };
+        await cartsService.updateCart({ _id: cartId }, newproduct);
         res.send({ status: "success", message: "Producto agregado al carro" });
     }
 }
 
 const deleteProductInCart = async (req, res) => {
-    const { cid, pid } = req.params;
+    const { pid } = req.params;
+    const cartId = req.user.cart;
     try {
-        const carritoActualizado = await cartsService.removeProductFromCart(cid, pid);
+        const carritoActualizado = await cartsService.removeProductFromCart(cartId, pid);
         res.status(200).send({ status: "success", message: "Producto eliminado del carrito", cart: carritoActualizado });
     } catch (error) {
         res.status(500).send({ error: error.message });
@@ -149,15 +176,29 @@ const deleteProductInCart = async (req, res) => {
 }
 
 const deleteAllProductsInCart = async (req, res) => {
-
+    const cartId = req.user.cart;
+    try {
+        // Traigo el carrito al que eliminare los productos
+        const cart = await cartsService.getCartBy({ _id: cartId });
+        // Elimino todos los productos de dicho carrito y retorno la lista vacia
+        if (cart) {
+            const vaciarcart = { products: [] };
+            await cartsService.deleteAllProductsInCart({ _id: cartId }, vaciarcart);
+            return res.send({ status: "sucess", message: "Se vacio el carrito totalmente" });
+        } else {
+            return res.send({ status: "error", message: "Hubo un error, no se puede vaciar el carrito" });
+        }
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
 }
-
 export default {
     getCart,
+    getCartCompra,
     createCart,
     purchaseCart,
     updateProductInCartNO_AUTH,
     updateProductInCart,
     deleteProductInCart,
-    deleteAllProductsInCart
+    deleteAllProductsInCart,
 }

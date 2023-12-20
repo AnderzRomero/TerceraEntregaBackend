@@ -11,6 +11,7 @@ const Login = async (req, res) => {
         name: `${req.user.firstName} ${req.user.lastName}`,
         nombres: req.user.firstName,
         apellidos: req.user.lastName,
+        email: req.user.email,
         id: req.user._id,
         role: req.user.role,
         cart: req.user.cart

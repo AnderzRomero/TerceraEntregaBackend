@@ -34,20 +34,9 @@ export default class cartDao {
   }
 
   update = async (cartId, newProducts) => {
-    try {
-      const existingCart = await cartModel.findById(cartId);
-      if (!existingCart) throw new Error(`No se encontró el carrito con ID ${cartId}`);
+    return cartModel.updateOne({_id: cartId}, {$set: newProducts});
+  };
 
-
-      existingCart.products = newProducts;
-
-      const updatedCart = await existingCart.save();
-
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  }
   updateProductQuantity = async (cartId, updatedProducts) => {
     try {
       // Encuentra el carrito por su ID
@@ -67,21 +56,9 @@ export default class cartDao {
     }
   }
 
-  deleteAllProductsInCart = async (cartId) => {
-    try {
-      const existingCart = await cartModel.findById(cartId);
-      if (!existingCart) throw new Error(`No se encontró el carrito con ID ${cartId}`);
-
-
-      existingCart.products = [];
-
-      const updatedCart = await existingCart.save();
-
-      return updatedCart;
-    } catch (error) {
-      throw error;
-    }
-  }
+  deleteAllProductsInCart = async (cartId, vaciarcart) => {
+    return cartModel.updateOne({ _id: cartId }, { $set: vaciarcart });
+  };
 
   removeProductFromCart = async (cartId, productId) => {
     try {

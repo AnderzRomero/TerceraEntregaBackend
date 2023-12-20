@@ -12,14 +12,14 @@ export default class CartsRepository {
     createCart = (products) => {
         return this.dao.create(products);
     }
-    updateCart = (cartId, newProducts) => {
-        return this.dao.update(cartId, newProducts);
+    updateCart = (cartId, newproduct) => {
+        return this.dao.update(cartId, newproduct);
     }
     updateProductQuantity = (cartId, updatedProducts) => {
         return this.dao.updateProductQuantity(cartId, updatedProducts);
     }
-    deleteAllProductsInCart = (cartId) => {
-        return this.dao.deleteAllProductsInCart(cartId);
+    deleteAllProductsInCart = (cartId, vaciarcart) => {
+        return this.dao.deleteAllProductsInCart(cartId, vaciarcart);
     }
     removeProductFromCart = (cartId, productId) => {
         return this.dao.removeProductFromCart(cartId, productId);

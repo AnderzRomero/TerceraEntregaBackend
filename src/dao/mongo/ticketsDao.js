@@ -1,14 +1,28 @@
 import ticketModel from "./models/tickets.model.js"
 
 export default class ticketsDao {
-    createTicket = async (userId, cartId, amount) => {
-        try {
-            const ticket = new ticketModel({ amount, purchaser: userId });
+    get = (params) => {
+        return ticketModel.find(params).lean();
+    }
 
-            const savedTicket = await ticket.save();
-            return savedTicket;
-        } catch (error) {
-            throw error;
-        }
-    };
+    getBy = (params) => {
+        return ticketModel.findOne(params).lean();
+    }
+
+    create = async (ticket) => {
+        return ticketModel.create(ticket);
+    }
+
+    update = (id, ticket) => {
+        return ticketModel.updateOne({ _id: id }, { $set: ticket });
+    }
+
+    delete = (id) => {
+        return ticketModel.updateOne({ _id: id });
+    }
+
+
+
+
+
 }

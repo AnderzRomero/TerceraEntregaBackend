@@ -1,42 +1,82 @@
-<h1 class="title">Carrito de Compras</h1>
-<br>
-<ul>
-<div class="container">
+<div>
+    <h1 class="title">Carrito de Compras</h1>
+</div>
+
+<div>
     {{#if cart}}
-        <span><p> <strong>id carrito</strong>: {{cart._id}}</p></span>
-        <div>
-            <a href="/api/products"><button>Regresar a Tienda</button></a>
-            <button class="buy_btn" onclick="buy_cart('{{this._id}}, {{sumPrice cart.products}}')">Realizar Compra</button>
-        </div>
+    <div class="subtitle">
         <h2>Productos en el carrito</h2>
-        {{#if cart.products.length}}
+    </div>
+    <div>
+        <table class="table">
+            <thead class="tablehead">
+                <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Codigo</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio Unidad</th>
+                    <th scope="col">Subtotal</th>
+                </tr>
+            </thead>
+            {{#if cart.products.length}}
             {{#each cart.products}}
-            <br>
-            <div class="card" id={{this._id._id}} cant={{this.quantity}}>
-                    <div class="card-body">
-                        <img class="card-img" src={{this._id.thumbnail}} alt={{this._id.title}}>
+            <tbody class="carritoContainer">
+
+                <div class="card-body">
+                    <td><img class="card-img" src={{this._id.thumbnail}} alt={{this._id.title}}></td>
+                    <td>
                         <h5 class="card-title">{{this._id.title}}</h5>
-                            <div class="card-info">
-                                <p class="card-text">{{this._id.description}}</p>
-                                <p class="card-text"><strong>Categoría: </strong>{{this._id.category}}</p>
-                                <p class="card-text"><strong>Código:</strong> {{this._id.code}}</p>
-                                <p class="card-text"><strong>Stock:</strong> {{this._id.stock}}</p>
-                                <p class="card-text"><strong>Precio: $ </strong>{{this._id.price}}</p>
-                                <p class="card-text"><strong>Cantidad: </strong>{{this.quantity}}</p>
-                            </div>
+                    </td>
+                    <div class="card-info">
+                        <td>
+                            <p class="card-text">{{this._id.description}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text">{{this._id.category}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text">{{this._id.code}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text">{{this._id.stock}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text">{{this.quantity}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text"><strong>$ </strong>{{this._id.price}}</p>
+                        </td>
+                        <td>
+                            <p class="card-text"><strong>$ </strong>{{subtotal this._id.price this.quantity}}</p>
+                        </td>
                     </div>
-            </div>
+                </div>
+            </tbody>
             {{/each}}
-            <br>
-            <hr>
-            <span>
-            <h3>total: {{sumPrice cart.products}}</h3></span>
-        {{else}}
-            <span><p>No hay productos en el carrito.</p></span> 
-        {{/if}}   
+        </table>
+        <span class="amountProducts">
+            <h3>total: {{sumPrice cart.products}}</h3>
+        </span>
+    </div>
+    <br>
+    <hr>
+
+    {{else}}
+    <span>
+        <p>No hay productos en el carrito.</p>
+    </span>
+    {{/if}}
+    <div class="btnCart">
+        <a href="/api/products"><button type="button" class="btn btn-dark">Regresar a Tienda</button></a>
+        <button type="button" class="btn btn-dark" onclick="buy_cart('{{cart._id}}')">Realizarm Compra</button>
+    </div>
     {{else}}
     <p>No se encontró ningún carrito.</p>
     {{/if}}
 </div>
-</ul>
+
 <script src="/js/carts.js"></script>

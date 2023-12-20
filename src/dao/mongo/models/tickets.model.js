@@ -5,14 +5,12 @@ const schema = new mongoose.Schema({
     code: {
         type: String,
         unique: true,
-        required: true,
-        default: function () {
-            return generateUniqueCode(8);
-        },
+        required: true,        
     },
     purchase_datetime: {
         type: Date,
-        default: Date.now,
+        required: true,
+        default: new Date().toISOString(),
     },
     amount: {
         type: Number,
@@ -22,20 +20,19 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-});
-
-// generador de codigos (cuasi unicos, nunca hay que tentar a la aleatoriedad)
-function generateUniqueCode(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let code = '';
-
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        code += characters.charAt(randomIndex);
-    }
-
-    return code;
+    products: {
+        type: Array,
+        default: [],
+    },
+    active: {
+        type: Boolean,
+        default: true,
+    },
+},
+{
+    timestamps: true,
 }
+);
 
 const ticketModel = mongoose.model(collection, schema);
 export default ticketModel;

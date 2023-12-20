@@ -2,7 +2,6 @@ import express from "express";
 import exphbs from 'express-handlebars';
 import cookieParser from "cookie-parser";
 import "./dao/mongo/dbConfig.js";
-import { Server } from "socket.io";
 
 import viewsRouter from "./routes/ViewsRouter.js";
 import SessionsRouter from "./routes/SessionsRouter.js";
@@ -16,7 +15,7 @@ import config from "./config/config.js";
 const app = express();
 const PORT = config.app.PORT;
 
-const server = app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
 
 // middlewars
 app.use(express.urlencoded({ extended: true }));
@@ -26,14 +25,18 @@ app.use(cookieParser());
 
 //configuracion de handlebars
 const hbs = exphbs.create({
-    helpers:
+    helpers: 
     {
-        sumPrice: function (products) {
+        sumPrice: function (products) 
+        {
             let total = 0;
             for (const product of products) {
                 total += product._id.price * product.quantity;
             }
             return total;
+        },
+        subtotal: function(value1, value2){
+            return value1 * value2;
         }
     }
 });
@@ -51,9 +54,3 @@ app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use('/api/sessions', SessionsRouter);
-
-const io = new Server(server);
-
-io.on('connection', socket => {
-    console.log(`Se ha conectado el socket ${socket.id}`);
-})

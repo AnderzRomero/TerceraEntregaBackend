@@ -40,14 +40,14 @@ li {
   font-family: "optima", cursive;
   font-size: 3rem;
   text-align: center;
-  margin: 10rem 20px;
+  margin: 5rem 10px;
 }
 
 .subtitle {
   font-family: "optima", cursive;
   font-size: 28px;
   text-align: center;
-  margin: 5px;
+  margin-bottom: 30px;
 }
 
 .formProducts {
@@ -119,6 +119,43 @@ li {
   flex-direction: column;
   align-items: center;
   color: white;
+}
+
+.table {
+  max-width: 95%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+
+.amountProducts{
+  text-align: center;  
+}
+
+.carritoContainer {
+  background: radial-gradient(circle, rgba(50, 96, 135) 0%, rgba(0, 0, 0, 0.6783088235294117) 100%);
+  border-radius: 10px;
+  color: white;
+  margin-top: 20px;
+
+}
+
+.carritoContainer p {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btnCart {  
+  max-width: 30% !important;
+  align-items: center !important;  
+  margin: 0 auto;
+}
+.tablehead{
+  background-color: rgba(0, 0, 0, 0.849);
+  color: #ffffff;
 }
 
 .card-img {
