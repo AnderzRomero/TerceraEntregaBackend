@@ -4,7 +4,7 @@ import cartsControllers from "../controllers/carts.controllers.js";
 class CartsRouter extends BaseRouter {
   init() {
     // Endpoint para obtener carrito
-    this.get("/", ['USER'], cartsControllers.getCart);
+    this.get("/", ['USER', 'ADMIN'], cartsControllers.getCart);
     // Endpoint para obtener carrito para compra
     this.get("/:cid",['USER'], cartsControllers.getCartCompra);    
     // Endpoint para crear carrito

@@ -1,6 +1,6 @@
 <h1 class="container-fluid">Lista de Productos</h1>
 {{#if user}}
-<h2 class="container-fluid">Bienvenido {{user.name}} Tienes el rol de :{{user.role}}</h2>
+<h2 class="container-fluid">Bienvenid@ {{user.name}} Tienes el rol de :{{user.role}}</h2>
 <a href="/api/sessions/logout"><button>Cerrar Session</button></a>
 <a href="/api/carts"><button>Ir al carrito</button></a>
 {{else}}
@@ -25,20 +25,20 @@
                 <p class="card-text"><strong>Precio: $ </strong>{{this.price}}</p>
             </div>
         </div>
-        <button onclick="addProduct('{{this._id}}')">Agregar al Carrito</button>
+        <button onclick="addProduct('{{this._id}}')" class="btn btn-card">Agregar al Carrito</button>
     </div>
     {{/each}}
 </div>
 
 <div class="paginationPanel">
     {{#if hasPrevPage}}
-    <a href="/?page={{prevPage}}"><button>Anterior</button></a>
+    <a href="/?page={{prevPage}}"><button class="btn btn-dark">Anterior</button></a>
     {{/if}}
 
     <h5>Pagina: {{page}}</h5>
 
     {{#if hasNextPage}}
-    <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
+    <a href="/?page={{nextPage}}"><button class="btn btn-dark">Siguiente</button></a>
     {{/if}}
 </div>
 

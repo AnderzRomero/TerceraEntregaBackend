@@ -72,11 +72,9 @@
     {{/if}}
     <div class="btnCart">
         <a href="/api/products"><button type="button" class="btn btn-dark">Regresar a Tienda</button></a>
-        <button type="button" class="btn btn-dark" onclick="buy_cart('{{cart._id}}')">Realizarm Compra</button>
+        <a href="/api/carts/tickets"><button type="button" class="btn btn-dark">Realizar Compra</button></a>
     </div>
     {{else}}
     <p>No se encontró ningún carrito.</p>
     {{/if}}
 </div>
-
-<script src="/js/carts.js"></script>

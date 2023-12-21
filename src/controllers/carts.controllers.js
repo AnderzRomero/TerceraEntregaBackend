@@ -15,20 +15,17 @@ const getCart = async (req, res) => {
 
 const getCartCompra = async (req, res) => {
     try {
-        const cod  = req.body.code;
-        console.log("Codigo del ticket", cod);
-        // const ticket = await ticketsService.getTicketsBy({ code: cod });
-        // console.log(ticket);
-
-        // const { cid } = req.params;
-        // const cart = await cartsService.getCartBy({ _id: cid });
-        // if (!cart) return res.status(404).send({ status: "error", message: "Cart not found" });
+        const user = req.user;
+        const cid = req.user.cart;
+        const cart = await cartsService.getCartBy({ _id: cid });
+        if (!cart) return res.status(400).send({ status: "error", error: "Carrito no encontrado" });
         res.render('tickets', {
-            css: 'products'
-
-        });
+            css: 'tickets',    
+            cart: cart,
+            user: user
+        })
     } catch (error) {
-        res.status(400).send({ status: "error", message: "Carrito no encontrado estoy aqui" });
+        res.status(400).send({ status: "error", message: "Carrito no encontrado" });
     }
 }
 

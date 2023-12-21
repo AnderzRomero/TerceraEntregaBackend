@@ -21,7 +21,6 @@ async function buy_cart(id) {
             })
             .then(result => {                
                 if (result.message === "Compra exitosa") {
-                    const codeTicket = result.payload.code;
                     window.location.href = `/api/carts/tickets`;
                 }
             })
